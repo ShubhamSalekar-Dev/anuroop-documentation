@@ -138,18 +138,76 @@ Server **194** is dedicated solely to **database replication**.
 - Requires discipline to sync changes to production  
 - Dependency on synchronization between development and production environments
 
-## Architecture Diagram
+## Application Structure & User Category
+## 1. Technology Overview
+The application consists of three main components:
 
+### Web Application
+- Built using **ASP.NET Web Forms (.aspx)**
+- Handles both frontend and backend logic
+### Mobile Application
+- Developed using Flutter
+- Consumes APIs for all operations
+### API Layer
+- Built using **ASP.NET Web Forms 
+- Used primarily by the mobile application for data interaction
 
+## 2. Application Segmentation
+The web application is divided into two distinct parts based on user category:
 
+### 1. Control Panel (Internal System)
+  Used by internal stakeholders responsible for managing and maintaining the system.
 
-## System Actors
+### 2. User Panel (External System)
+   Used by end users interacting with the platform.
 
-### Internal Actors
-- **Owner**: System owner and administrator
-- **Developer**: All development team members
-- **Control Team**: Testing team members (also known as Testing Team)
-
-### External Actors
-- **Members**: Registered users with full platform access
+## 3. System Actors
+### 3.1 Internal Actors (Control Panel)
+- **Owner**: System owner with full administrative control
+- **Developer**: Development team members responsible for building and maintaining the system
+- **Control Team (Testing Team)**: QA and testing team members
+  
+### 3.2 External Actors (User Panel)
+- **Members**: Registered users with full access to platform features
 - **Visitors**: Non-registered users with limited access
+
+## 4. Category-Based UI Behavior
+The application dynamically changes its UI and functionality based on the type of user logged in.
+### e.g. Login Routes
+
+- **Control Panel Login**
+```
+/control/login.aspx
+```
+- **User Panel Login**
+```
+/user/login.aspx
+```
+
+### Behavior
+Different interfaces, features, and workflows are presented depending on whether the user is:
+- Admin (Control)
+- Member (User)
+
+## 5. Mobile Application Limitation
+- The **mobile application supports only the User Panel**.
+- There is **no Control Panel functionality available in the mobile app**.
+### Implication
+- Internal users (Owner, Developer, Testing Team) must log in via the **web application** to access control features.
+
+## 6. Data Retrieval Strategy
+The system uses different data sources based on usage patterns and performance requirements.
+
+### 6.1 User Panel (High Performance Requirement)
+- Frequently accessed data is stored in Firestore
+- Benefits:
+    - Faster data retrieval
+    - Better performance for end users
+- Search Optimization
+    - Algolia is used for: Fast searching, Efficient filtering
+
+### 6.2 Control Panel (Standard Performance Requirement)
+- Data is directly fetched from SQL Server
+- Reason:
+    - Control panel operations do not require ultra-fast retrieval
+    - Focus is more on accuracy and full data access
