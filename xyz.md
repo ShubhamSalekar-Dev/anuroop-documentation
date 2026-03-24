@@ -1,5 +1,17 @@
 # Anuroop Documentation
 
+## Overview
+
+This repository contains comprehensive documentation for the **Anuroop** matrimonial platform. It serves as a central knowledge management system for developers, testers, and stakeholders working on the project.
+
+## API Configuration
+
+### Base URLs
+- **UI Base URL**: `https://anuroopwiwaha.com` - Frontend application URL
+- **API Base URL**: `https://api.anuroopwiwaha.com` - Backend API endpoint
+- **Algolia Base URL**: `https://anuroop-places-1.algolia.net` - Location search service
+- **Last Updated**: [Date will be updated when changed]
+  
 ## What Technology is Used Here?
 
 The project is an ASP.NET Web Forms application built on the .NET Framework 4.5 using C# as the primary programming language.
@@ -13,34 +25,6 @@ In addition to the core framework, the project integrates a wide array of modern
 - **Messaging & Communication: Twilio** (for SMS), WhatsApp API Integrations, **SendGrid** (for emails), and **Intercom** (for customer support/chats).
 - **Background Jobs: Hangfire** is initialized in Global.asax to handle scheduled background tasks.
 
-## Server Configuration
-
-### Test Server (Server106) {#test-server}
-- **IP Address**: 198.120.130.106
-- **Purpose**: Test environment and development, Serves as backup for live environment
-- **Database**: Test database (replica of live)
-- **Cron Jobs**: Full Member Update
-- **Application Used**: Task Schedular
-- **Environment**: Development/Testing
-- **Last Updated**: [Date will be updated when changed]
-
-### Live Server (Server22) {#live-server}
-- **IP Address**: 198.120.130.22
-- **Purpose**: Production environment
-- **Database**: Live database
-- **Cron Jobs**: Used to execute cron jobs, primarily handling lightweight jobs such as interest updates etc.
-- **Application Used**: Z-Cron
-- **Traffic**: Serves all production users
-- **Environment**: Production
-- **Last Updated**: [Date will be updated when changed]
-
-### Replica Server (Server 194) {#Replica-server}
-- **IP Address**: 
-- **Purpose**: Contains only the replica database, which is used by cron jobs to update Firestore data.
-- **Database**: Replica database
-- **Sync**: Real-time replication from Live Server
-- **Last Updated**: [Date will be updated when changed]
-
 ## Database Configuration
 
 ### Primary Database (SQL Server) {#primary-database-sql-server}
@@ -52,14 +36,23 @@ In addition to the core framework, the project integrates a wide array of modern
 - **Last Updated**: [Date will be updated when changed]
 
 ## System Architecture
-### Overview
 
+### Overview
 The system is distributed across three servers: **22 (Production), 106 (Development), and 194 (Replication Database Server)**. Each server has a specific role in handling application logic, data management, and background processing.
 
-### 1. Server 22 – Production (Source of Truth)
-
+## 1. Server 22 – Production (Source of Truth)
 Server 22 is the **primary production server** and acts as the **single source of truth** for all data.
 
+### Server Configuration
+- **IP Address**: 198.120.130.22
+- **Purpose**: Production environment
+- **Database**: Live database
+- **Cron Jobs**: Used to execute cron jobs, primarily handling lightweight jobs such as interest updates etc.
+- **Application Used**: Z-Cron
+- **Traffic**: Serves all production users
+- **Environment**: Production
+- **Last Updated**: [Date will be updated when changed]
+  
 ### Components Hosted
 - SQL Server Database
 - API Project
@@ -70,10 +63,18 @@ Server 22 is the **primary production server** and acts as the **single source o
 The **API** and **Web** applications interact directly with the local SQL database on this server.
 The **Cron Project**, however, does not use the local database. Instead, it connects to the database hosted on Server 194 for processing tasks.
 
-### 2. Server 106 – Development
-
+## 2. Server 106 – Development
 Server 106 is used for **development and testing** purposes.
 
+### Server Configuration
+- **IP Address**: 198.120.130.106
+- **Purpose**: Test environment and development, Serves as backup for live environment
+- **Database**: Test database (replica of live)
+- **Cron Jobs**: Full Member Update
+- **Application Used**: Task Schedular
+- **Environment**: Development/Testing
+- **Last Updated**: [Date will be updated when changed]
+  
 ### Components Hosted
 - SQL Server Database
 - API Project
@@ -99,10 +100,16 @@ On the 15th of every month, the entire data and database structure from **Server
 - Any new or modified database objects (e.g., stored procedures, functions, scripts) created on Server 106 will be **overwritten** during replication if they do not exist on Server 22.
 - This can lead to loss of development work if changes are not synchronized with the production server.
 
-### 3. Server 194 – Replication Database Server
-
+## 3. Server 194 – Replication Database Server
 Server **194** is dedicated solely to **database replication**.
 
+### Server Configuration
+- **IP Address**: 
+- **Purpose**: Contains only the replica database, which is used by cron jobs to update Firestore data.
+- **Database**: Replica database
+- **Sync**: Real-time replication from Live Server
+- **Last Updated**: [Date will be updated when changed]
+  
 ### Components Hosted
 - SQL Server Database (Replica of Server 22)
   
@@ -149,7 +156,7 @@ The application consists of three main components:
 - Developed using Flutter
 - Consumes APIs for all operations
 ### API Layer
-- Built using **ASP.NET Web Forms 
+- Built using **ASP.NET Web Forms**
 - Used primarily by the mobile application for data interaction
 
 ## 2. Application Segmentation
@@ -199,15 +206,22 @@ Different interfaces, features, and workflows are presented depending on whether
 The system uses different data sources based on usage patterns and performance requirements.
 
 ### 6.1 User Panel (High Performance Requirement)
-- Frequently accessed data is stored in Firestore
+- Frequently accessed data is stored in **Firestore**
 - Benefits:
     - Faster data retrieval
     - Better performance for end users
-- Search Optimization
-    - Algolia is used for: Fast searching, Efficient filtering
+- **Search Optimization**
+    - **Algolia** is used for: Fast searching, Efficient filtering
 
 ### 6.2 Control Panel (Standard Performance Requirement)
-- Data is directly fetched from SQL Server
+- Data is directly fetched from **SQL Server**
 - Reason:
     - Control panel operations do not require ultra-fast retrieval
     - Focus is more on accuracy and full data access
+
+
+## Security Note
+This document contains sensitive configuration information. Ensure proper access controls are in place and consider using environment variables for sensitive data in production.
+
+---
+*This document serves as the single source of truth for all system configuration details.*
